@@ -9,12 +9,13 @@ import { addEventListener, getActionsObject } from './marshal';
 import registerRootComponent from '../launch/registerRootComponent';
 
 interface MarshalledProps {
-  name: string[];
+  names: string[];
   props: Record<string, JSONValue>;
   [key: string]: undefined | JSONValue;
 }
 
 interface WindowType {
+  $$EXPO_DOM_HOST_OS?: string;
   $$EXPO_INITIAL_PROPS?: MarshalledProps;
 }
 
@@ -65,6 +66,13 @@ function convertError(error: any) {
 }
 
 export function registerDOMComponent(AppModule: any) {
+  if (typeof window.$$EXPO_DOM_HOST_OS === 'undefined') {
+    throw new Error(
+      'Top OS ($$EXPO_DOM_HOST_OS) is not defined. This is a bug in the DOM Component runtime.'
+    );
+  }
+  process.env.EXPO_DOM_HOST_OS = window.$$EXPO_DOM_HOST_OS;
+
   function DOMComponentRoot(props: Record<string, unknown>) {
     // Props listeners
     const [marshalledProps, setProps] = React.useState(() => {
@@ -92,7 +100,7 @@ export function registerDOMComponent(AppModule: any) {
       // Create a named map { [name: string]: ProxyFunction }
       // TODO(@kitten): Unclear how this is typed or shaped
       return Object.fromEntries(
-        (marshalledProps.names as string[]).map((key: string) => {
+        marshalledProps.names.map((key: string) => {
           return [key, ACTIONS[key]];
         })
       );

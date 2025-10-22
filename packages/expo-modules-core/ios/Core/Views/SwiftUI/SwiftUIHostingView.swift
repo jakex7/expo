@@ -42,7 +42,7 @@ extension ExpoSwiftUI {
   /**
    A hosting view that renders a SwiftUI view inside the UIKit view hierarchy.
    */
-  public final class HostingView<Props: ViewProps, ContentView: View<Props>>: ExpoView, AnyExpoSwiftUIHostingView {
+  public final class HostingView<Props: ViewProps, ContentView: View<Props>>: ExpoView, @MainActor AnyExpoSwiftUIHostingView {
     /**
      Props object that stores all the props for this particular view.
      It's an environment object that is observed by the content view.
@@ -65,7 +65,11 @@ extension ExpoSwiftUI {
      */
     init(viewType: ContentView.Type, props: Props, appContext: AppContext) {
       self.contentView = ContentView(props: props)
-      let rootView = AnyView(contentView.environmentObject(shadowNodeProxy))
+      let rootView = AnyView(
+        contentView
+          .environmentObject(shadowNodeProxy)
+          .environment(\.appContext, appContext)
+      )
       self.props = props
       let controller = UIHostingController(rootView: rootView)
 

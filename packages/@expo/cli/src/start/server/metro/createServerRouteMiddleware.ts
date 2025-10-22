@@ -6,7 +6,8 @@
  */
 
 import type { ProjectConfig } from '@expo/config';
-import type { MiddlewareSettings } from '@expo/server';
+import type { MiddlewareSettings } from 'expo-server';
+import { createRequestHandler } from 'expo-server/adapter/http';
 import resolve from 'resolve';
 import resolveFrom from 'resolve-from';
 import { promisify } from 'util';
@@ -40,16 +41,14 @@ export function createRouteHandlerMiddleware(
       functionFilePath: string
     ) => Promise<null | Record<string, Function> | Response>;
     config: ProjectConfig;
-  } & import('expo-router/build/routes-manifest').Options
+    headers: Record<string, string | string[]>;
+  } & import('@expo/router-server/build/routes-manifest').Options
 ) {
   if (!resolveFrom.silent(projectRoot, 'expo-router')) {
     throw new CommandError(
       `static and server rendering requires the expo-router package to be installed in your project. Either install the expo-router package or change 'web.output' to 'single' in your app.json.`
     );
   }
-
-  const { createRequestHandler } =
-    require('@expo/server/adapter/http') as typeof import('@expo/server/adapter/http');
 
   return createRequestHandler(
     { build: '' },
@@ -118,8 +117,7 @@ export function createRouteHandlerMiddleware(
         }
       },
       async handleRouteError(error) {
-        // NOTE(@kitten): temporarily vendored check instead of `ExpoError.isExpoError` to avoid API incompatibility for when
-        // we rename `@expo/server` if we ever hot-swap the implementation
+        // NOTE(@kitten): ExpoError is currently not exposed by expo-server just yet
         if (error && typeof error === 'object' && error.name === 'ExpoError') {
           // TODO(@krystofwoldrich): Can we show code snippet of the handler?
           // NOTE(@krystofwoldrich): Removing stack since to avoid confusion. The error is not in the server code.

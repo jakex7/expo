@@ -6,7 +6,12 @@
 
 ### 🎉 New features
 
+- [Android] Add contentUri property. ([#40002](https://github.com/expo/expo/pull/40002) by [@aleqsio](https://github.com/aleqsio))
+
 ### 🐛 Bug fixes
+
+- [Android] Fix recursive file deletion. ([#40248](https://github.com/expo/expo/pull/40248) by [@aleqsio](https://github.com/aleqsio))
+- [iOS] Add missing `createFile` and `createDirectory` methods. ([#40314](https://github.com/expo/expo/pull/40314) by [@jakex7](https://github.com/jakex7))
 
 ### 💡 Others
 
@@ -15,6 +20,7 @@
 ### 🎉 New features
 
 - Add write options for base64 encoded bytes. ([#39963](https://github.com/expo/expo/pull/39963) by [@aleqsio](https://github.com/aleqsio))
+- [iOS] Add file sharing config options ([#39286](https://github.com/expo/expo/pull/39286) by [@kosmydel](https://github.com/kosmydel))
 
 ### 🐛 Bug fixes
 

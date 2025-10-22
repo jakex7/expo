@@ -7,15 +7,21 @@
 ### 🎉 New features
 
 - Added support for cli command extensions in the interactive devtools menu ([#39598](https://github.com/expo/expo/pull/39598) by [@chrfalch](https://github.com/chrfalch))
+- [Android] Sync flavor dimensions and product flavors from app to expo module ([#40238](https://github.com/expo/expo/pull/40238) by [@kosmydel](https://github.com/kosmydel))
 
 ### 🐛 Bug fixes
 
+- fix globMatchFunctorAllAsync to check if globbed path is a file to prevent errors ([#40437](https://github.com/expo/expo/pull/40437) by [@artus9033](https://github.com/artus9033)) ([#40501](https://github.com/expo/expo/pull/40501) by [@kitten](https://github.com/kitten))
+- [iOS] Added build phase script for a workaround to autolinking-generated react-native-config output not being used in ReactCodegen script phase due to temp output directory. ([#40219](https://github.com/expo/expo/pull/40219) by [@chrfalch](https://github.com/chrfalch))
 - [Android] Fix passing exclude options. ([#40014](https://github.com/expo/expo/pull/40014) by [@jakex7](https://github.com/jakex7))
+- Ignore missing `package.json` name property when scanning dependencies ([#40367](https://github.com/expo/expo/pull/40367) by [@kitten](https://github.com/kitten))
+- [Android] Fixed `library projects cannot set applicationIdSuffix`. ([#40477](https://github.com/expo/expo/pull/40477) by [@lukmccall](https://github.com/lukmccall))
 
 ### 💡 Others
 
 - [Android] Move generate-package-list to Gradle task ([#39917](https://github.com/expo/expo/pull/39917) by [@jakex7](https://github.com/jakex7))
 - [Android] Use module name from `expo-module.config.json`. ([#39985](https://github.com/expo/expo/pull/39985) by [@jakex7](https://github.com/jakex7))
+- Check `react-native` and `react-native-tvos` for duplicates in the verify command explicitly ([#40180](https://github.com/expo/expo/pull/40180) by [@kitten](https://github.com/kitten))
 
 ## 3.0.14 - 2025-10-01
 

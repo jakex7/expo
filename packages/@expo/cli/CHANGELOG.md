@@ -8,15 +8,23 @@
 
 - Added support for cli command extension in expo modules ([#39598](https://github.com/expo/expo/pull/39598) by [@chrfalch](https://github.com/chrfalch))
 - Add support for server data loaders in development ([#39570](https://github.com/expo/expo/pull/39570) by [@hassankhan](https://github.com/hassankhan))
+- Allow specifying user-defined headers for all routes ([#40173](https://github.com/expo/expo/pull/40173) by [@hassankhan](https://github.com/hassankhan))
 
 ### 🐛 Bug fixes
 
 - fix launching apps on Android emulators where `hw.keyboard = no` ([#34677](https://github.com/expo/expo/pull/34677) by [@DimitarNestorov](https://github.com/DimitarNestorov))
 - only skip dependency validation for `EXPO_NO_DEPENDENCY_VALIDATION=1` ([#40043](https://github.com/expo/expo/pull/40043) by [@kitten](https://github.com/kitten))
+- Prevent externals logic from being applied to unreachable Node modules ([#40247](https://github.com/expo/expo/pull/40247) by [@kitten](https://github.com/kitten))
 
 ### 💡 Others
 
+- Remove `experiments.reactCanary` support in favor of built-in React +19.1 support. ([#40386](https://github.com/expo/expo/pull/40386) by [@EvanBacon](https://github.com/EvanBacon))
 - Update usage of `@expo/server` API ([#39894](https://github.com/expo/expo/pull/39894) by [@kitten](https://github.com/kitten))
+- Rename to `@expo/server` to `expo-server` ([#40087](https://github.com/expo/expo/pull/40087) by [@kitten](https://github.com/kitten))
+- Export `_expo/.routes.json` metadata file for `static` outputs ([#40243](https://github.com/expo/expo/pull/40243) by [@kitten](https://github.com/kitten))
+- Add environmental variable to enable experimental web modal implementation ([#40231](https://github.com/expo/expo/pull/40231) by [@Ubax](https://github.com/Ubax))
+- Bump to `@expo/metro@54.1.0` and `metro@0.83.2` ([#39826](https://github.com/expo/expo/pull/39826) by [@kitten](https://github.com/kitten))
+- Migrate static rendering logic from `expo-router` to `@expo/router-server` ([#39374](https://github.com/expo/expo/pull/39374) by [@hassankhan](https://github.com/hassankhan))
 
 ### ⚠️ Notices
 
@@ -35,6 +43,7 @@
 
 - Added MCP tunnel integration. ([#39392](https://github.com/expo/expo/pull/39392) by [@kudo](https://github.com/kudo))
 - Allow `experiments.autolinkingModuleResolution` to apply to web bundling ([#39701](https://github.com/expo/expo/pull/39701) by [@kitten](https://github.com/kitten))
+- Add `--api-only` as an alias for `--ssg-only` to `expo export -p web` ([#39709](https://github.com/expo/expo/pull/39709) by [@kitten](https://github.com/kitten))
 
 ## 54.0.5 — 2025-09-13
 
