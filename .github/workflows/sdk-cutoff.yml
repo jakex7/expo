@@ -1,4 +1,4 @@
-name: PR labeler
+name: Cut off SDK branch
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
           gh label create "SDK ${SDK_VERSION_NUMBER}" --color "0e8a16" --description "Pull requests targeting SDK ${SDK_VERSION_NUMBER} branch"
           gh label create "SDK ${SDK_VERSION_NUMBER} cherry-picked" --color "1d76db" --description "Pull requests cherry-picked into SDK ${SDK_VERSION_NUMBER} branch"
         env:
-          GH_TOKEN: ${{ secrets.EXPO_BOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
       - name: Output created branch GH link
         run: |
           echo "Created branch link: https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.sdkVersion }}"
