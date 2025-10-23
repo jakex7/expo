@@ -1,0 +1,31 @@
+name: PR labeler
+
+on:
+  workflow_dispatch:
+    inputs:
+      sdkVersion:
+        description: 'Enter the SDK branch name (sdk-XX)'
+        required: true
+
+jobs:
+  cutoff-sdk-branch:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: 👀 Checkout
+        uses: actions/checkout@v4
+      - name: Create SDK branch
+        id: create-sdk-branch
+        run: |
+          git checkout -b ${{ github.event.inputs.sdkVersion }}
+          git push origin ${{ github.event.inputs.sdkVersion }}
+      - name: Create SDK cherry-pick labels
+        run: |
+          # `SDK 54` label and `SDK 54 cherry-picked` label from `sdk-54` input
+          SDK_VERSION_NUMBER=$(echo "${{ github.event.inputs.sdkVersion }}" | sed 's/sdk-//')
+          gh label create "SDK ${SDK_VERSION_NUMBER}" --color "0e8a16" --description "Pull requests targeting SDK ${SDK_VERSION_NUMBER} branch"
+          gh label create "SDK ${SDK_VERSION_NUMBER} cherry-picked" --color "1d76db" --description "Pull requests cherry-picked into SDK ${SDK_VERSION_NUMBER} branch"
+        env:
+          GH_TOKEN: ${{ secrets.EXPO_BOT_GITHUB_TOKEN }}
+      - name: Output created branch GH link
+        run: |
+          echo "Created branch link: https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.sdkVersion }}"
