@@ -12,7 +12,8 @@ const octokit = new Octokit({
 const cachedPullRequests = new Map<number, PullRequest>();
 
 // Predefine some params used across almost all requests.
-const owner = 'expo';
+// const owner = 'expo';
+const owner = 'jakex7';
 const repo = 'expo';
 
 /**
@@ -52,6 +53,82 @@ export async function getPullRequestAsync(
   });
   cachedPullRequests.set(pull_number, data);
   return data;
+}
+
+/**
+ * Requests for the pull request object.
+ */
+export async function getAllMergedPullRequestsByLabelAsync(
+  label: string,
+  cursor?: string
+): Promise<PullRequestWithMerge[]> {
+  const results: PullRequestWithMerge[] = [];
+  const { repository } = await octokit.graphql<any>(
+    `query MergedPullRequestsByLabel($owner: String!, $repo: String!, $label: String!, $after: String) {
+      repository(owner: $owner, name: $repo) {
+        pullRequests(
+          first: 100
+          after: $after
+          states: MERGED
+          labels: [$label]
+          orderBy: {field: UPDATED_AT, direction: DESC}
+        ) {
+          edges {
+            node {
+              number
+              title
+              url
+              mergedBy {
+                login
+                url
+              }
+              mergeCommit {
+                sha: oid
+                committedDate
+              }
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+        }
+      }
+    }`,
+    { owner, repo, label, after: cursor }
+  );
+
+  results.push(...repository.pullRequests.edges.map((edge: any) => edge.node));
+
+  if (repository?.pullRequests?.pageInfo?.hasNextPage) {
+    const more = await getAllMergedPullRequestsByLabelAsync(
+      label,
+      repository.pullRequests.pageInfo.endCursor
+    );
+    results.push(...more);
+  }
+
+  return results;
+}
+
+/**
+ * Returns all SDK labels in the repository.
+ */
+export async function getAllSdkLabelsAsync(): Promise<LabelsSearch> {
+  const query = await octokit.paginate(octokit.search.labels, {
+    repository_id: 872348555,
+    q: 'SDK',
+  });
+
+  return query.filter((label) => label.name.match(/^SDK \d+$/));
+}
+
+/**
+ * Returns the login of the authenticated user.
+ */
+export async function whoami(): Promise<string> {
+  const { data } = await octokit.users.getAuthenticated();
+  return data.login;
 }
 
 /**
@@ -438,6 +515,20 @@ export async function updateReleaseTitle(
 export type PullRequestReviewEvent = 'COMMENT' | 'APPROVE' | 'REQUEST_CHANGES';
 export type PullRequest = RestEndpointMethodTypes['pulls']['get']['response']['data'];
 export type PullRequestReview = RestEndpointMethodTypes['pulls']['getReview']['response']['data'];
+export type LabelsSearch = RestEndpointMethodTypes['search']['labels']['response']['data']['items'];
 export type IssueComment = RestEndpointMethodTypes['issues']['getComment']['response']['data'];
 export type ListCommentsOptions = RestEndpointMethodTypes['issues']['listComments']['parameters'];
 export type ListCommentsResponse = RestEndpointMethodTypes['issues']['listComments']['response'];
+export type PullRequestWithMerge = {
+  number: number;
+  title: string;
+  url: string;
+  mergedBy: {
+    login: string;
+    url: string;
+  };
+  mergeCommit: {
+    sha: string;
+    committedDate: string;
+  };
+};
